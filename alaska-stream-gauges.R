@@ -37,3 +37,26 @@ Fortymile_dailyQdata <- whatNWISdata(siteNumber=fortymile_AK_sitenumbers,
 # condensed daily discharge data with period of record
 Fortymile_AK_dailyQPOR <- Fortymile_dailyQdata[,c("site_no","station_nm","parm_cd",
                                                     "begin_date","end_date", "count_nu")]
+
+# grab entire period of record for Fortymile near Steele Creek
+Fortymile_DailyQ <- readNWISdv(siteNumber="15348000", parameterCd="00060", 
+           startDate="", endDate="")
+
+# add better names for flow and flow code
+Fortymile_DailyQ <- renameNWISColumns(Fortymile_DailyQ)
+Fortymile_DailyQ <- addWaterYear(Fortymile_DailyQ)
+
+# save data to csv
+write.csv(Fortymile_DailyQ, file="Fortymile_DailyQ.csv")
+
+# let's play with data
+Fortymile_DailyQ %>% 
+  filter(waterYear == 1976) %>% 
+  ggplot(aes(Date, Flow)) +
+  geom_line()
+
+# plot
+Fortymile_DailyQ %>% 
+  ggplot(aes(Date, Flow)) +
+  geom_line()
+
